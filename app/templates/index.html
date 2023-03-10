@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>C137</title>
+  <meta content="A sample payment platform with paystack" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="static/img/letterj.webp" rel="icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="static/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="static/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="static/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="static/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="static/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Green - v4.7.0
+  * Template URL: https://bootstrapmade.com/green-free-one-page-bootstrap-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="d-flex align-items-center">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo me-auto"><a href="#">C137</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto"><img src="static/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto" href="#bank-list">List Bank API</a></li>
+          <li><a class="nav-link scrollto" href="#verification">Resolve Account Number API</a></li>
+          <li><a class="nav-link scrollto" href="#transfer-recipient">Transfer Recipient API</a></li>
+          <li><a class="nav-link scrollto " href="#popup">PopUp Checkout</a></li>
+          <li><a class="getstarted scrollto" href="#about">My Submission</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+
+    <!-- ======= About Us Section ======= -->
+    <section id="about" class="about">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-6 order-1 order-lg-2">
+            <br><br><img src="static/img/paystack.png" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
+            <h3>About this application</h3><br>
+            <p class="fst-italic">
+              This is webapp was created to demonstrate the intergration of at least two of Paystack's API 
+            </p>
+            <ul>
+              <li><i class="bi bi-check-circled"></i>It demonstrates three of their payment API's and one of their miscellaneous API's (Bank List) </li>
+              <li><i class="bi bi-check-circled"></i>These API's are integrated and are functioning on test Secret and Public Keys</li>
+              <li><i class="bi bi-check-circled"></i>Hence even the Pop up intergration is a test case and will not perform actual payment</li>
+            </ul>
+            <p>
+              Each of these API's are crucial and helpful for any payment platform 
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Us Section -->
+
+    <section id="bank-list">
+      <div class="container">
+        <div class="api-info">
+          <h2>List Bank API</h2><br>
+          <p>This Api gets a list of all supported banks within a specified country of paystack's coverage, and their properties.<br> To see a demonstration, type in a country e.g Ghana or Nigeria</p>
+        </div>
+
+        <form action="{{ url_for('get_bank_list') }}" method='post'>
+          <div class="form-div">
+            <div>
+              <input type="text" placeholder="Country" name="country">
+            </div>
+            <div>
+              <button type="submit">Get list of Banks</button>
+            </div>
+          </div>
+          <br>
+          {% if banks %}
+            <div>
+              <div class='results'>
+                {% if banks.status == true %}
+                <div class="row">
+                  <div style="overflow-x:auto;">
+                    <table>
+                      <tr>
+                        <th>Name</th>
+                        <th>Slug</th>
+                        <th>Code</th>
+                        <th>Longcode</th>
+                        <th>Gateway</th>
+                        <th>Pay_with_bank</th>
+                        <th>active</th>
+                        <th>is_deleted</th>
+                        <th>country</th>
+                        <th>currency</th>
+                        <th>type</th>
+                        <th>id</th>
+                        <th>createdAt</th>
+                        <th>updatedAt</th>
+                      </tr>
+                      {% for bank in banks['data'] %}
+                      <tr>
+                        {% for item in bank.values() %}
+                          <th>{{item}}</th>
+                        {% endfor %}
+                      </tr>
+                      {% endfor %}
+                    <table>
+                  </div>
+                </div>
+                {% else %}
+                  <h6><em>{{ banks.message }}<em></h6>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </form>
+
+      </div>
+    </section>
+    
+    <section id="verification">
+      <div class="container">
+        <div class="api-info">
+          <h2>Resolve Account Number API</h2><br>
+          <p>This is a KYC process API that confirms an account belongs to the customer you want to transfer money to.<br> To see a demonstration, type in an account number and the corresponding bank code.<br> You can get the respctive bank codes from the Bank List API above. Or you could try mine (i.e A/C:2230914852, Bank code: 033). You could show some love too $$$ ;) </p>
+        </div>
+
+        <form action="{{ url_for('resolve_account') }}" enctype="multipart/form-data"  method='post'>
+          <div class="form-div">
+            <div>
+              <input type="tel" placeholder="Account Number" name='account_number'>
+            </div>
+            <div>
+              <input type="tel" placeholder="Bank Code " name='bank_code'>
+            </div>
+            <div>
+              <button type="submit">Confirm owner</button>
+            </div>
+            <br>
+            {% if r_account %}
+            <div>
+              <div class='results row'>
+                {% if r_account.status == true %}
+                  <h6>The account number {{ r_account.data['account_number'] }} belongs to {{ r_account.data['account_name'] }}</h6>
+                {% else %}
+                  <h6><em>{{ r_account.message }}<em></h6>
+                {% endif %}
+              </div>
+            </div>
+
+            {% endif %}
+          </div>
+        </form>
+
+      </div>
+    </section>
+    
+    
+    <section id="transfer-recipient">
+      <div class="container">
+        <div class="api-info">
+          <h2>Transfer Recepient API</h2><br>
+          <p>This is API basically confirms the owner of the account you want to tansfer too by returning specific information about the account.<br> To see a demonstration, type in the name of the owner of the account, the account number and the corresponding bank code.</p>
+        </div>
+
+        <form action="{{ url_for('create_transfer_recipient') }}" method="post">
+          <div class="form-div">
+            <div>
+              <input type="text" placeholder="First name" name='first_name'>
+            </div>
+            <div>
+              <input type="text" placeholder="Last name" name='last_name'>
+            </div>
+            <div>
+              <select name="type">
+                <option value="nuban">NUBAN (Nigeria)</option>
+                <option value="mobile_money">Mobile money (Ghana)</option>
+              </select>
+            </div>
+            <div>
+              <select name="currency">
+                <option value="NGN">NGN</option>
+                <option value="GHC">GHS</option>
+                <option value="ZAR">ZAR</option>
+              </select>
+            </div>
+            <div>
+              <input type="tel" placeholder="Account Number" name='account_number'>
+            </div>
+            <div>
+              <input type="tel" placeholder="Bank Code" name='bank_code'>
+            </div>
+            <div>
+              <button type="submit">Create receipient</button>
+            </div>
+            <br>
+            {% if t_recipient %}
+            <div>
+              <div class='results row'>
+                {% if t_recipient.status == true %}
+                  <h6>{{ t_recipient }}</h6>
+                {% else %}
+                  <h6><em>{{ t_recipient.message }}<em></h6>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </form>
+
+      </div>
+    </section>
+
+    <!-- ======= Contact Section ======= -->
+    <section id="popup" class="contact">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Popup Checkout</h2>
+          <p>Pops up a test paystack terminal. Please fill the form to view demo</p>
+        </div>
+
+        <div id="payment-form" class="container payment-form">
+          <form id="paymentForm">
+            <div class="name-section">
+              <div class="form-group first-name">
+                <label for="first-name"></label>
+                <input type="text" id="first-name" placeholder="First name"/>
+              </div>
+              <div class="form-group last-name">
+                <label for="last-name"></label>
+                <input type="text" id="last-name" placeholder="last name"/>
+              </div>
+            </div>
+            <div class="email-section">
+              <div class="form-group">
+                <label for="email"></label>
+                <input type="email" id="email-address" required placeholder="email address"/>
+              </div>
+            </div>
+            <div class="amount-section">
+              <div class="form-group">
+                <label for="amount"></label>
+                <input type="tel" id="amount" required placeholder="amount"/>
+              </div>
+            </div>
+            <br>
+            
+            <div class="pay-button">
+              <div class="form-submit">
+                <button type="submit" onclick="payWithPaystack()"> Pay </button>
+              </div>
+            </div>
+            
+          </form>
+        </div>
+        <script>
+          const paymentForm = document.getElementById('paymentForm');
+          paymentForm.addEventListener("submit", payWithPaystack, false);
+          function payWithPaystack(e) {
+          e.preventDefault();
+
+          let handler = PaystackPop.setup({
+              key: 'pk_test_6bd41e5594aafbbd853956b4bc250ed7a824ec47', // Replace with your public key
+              email: document.getElementById("email-address").value,
+              amount: document.getElementById("amount").value * 100,
+              //ref: ''+Math.floor((Math.random() * 1000000000) + 1),  generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+              // label: "Optional string that replaces customer email"
+              onClose: function(){
+              alert('Window closed.');
+              },
+              callback: function(response){
+              let message = 'Payment complete! Reference: ' + response.reference;
+              alert(message);
+              }
+          });
+
+          handler.openIframe();
+          }
+        </script>
+
+      </div>
+    </section><!-- End Contact Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      <h3>C137</h3>
+      <p>I promise i'm a good developer, I'll get the job done</p>
+     
+      <div class="copyright">
+        &copy; Copyright <strong><span>jimi</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/green-free-one-page-bootstrap-template/ -->
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="static/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="static/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="static/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="static/vendor/php-email-form/validate.js"></script>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="static/js/main.js"></script>
+
+</body>
+
+</html>
