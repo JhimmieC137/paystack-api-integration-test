@@ -15,6 +15,7 @@ CORS(app, resources={r"/*":{'origins':"*"}})
 response = requests.get('https://api.paystack.co/bank', 
                         params={
                             'country':'nigeria',
+                            "pay_with_bank" : True
                         },
                         )
 banks = response.json()
@@ -68,8 +69,50 @@ response = requests.post ('https://api.paystack.co/transfer',
                                 }               
                             )
 '''
-# print(response.json())
-# print(reference)
+
+#Initialize Transaction
+'''
+email = "jhimmie.jimi@gmail.com"
+amount = 800
+response = requests.post(
+                        "https://api.paystack.co/transaction/initialize",
+                        headers={
+                            'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404',
+                            'Content-Type': 'application/json'
+                            },
+                        json={
+                            "email": email,
+                            "amount": amount*100
+                        }
+                    )
+'''
+#Verify Transaction
+'''
+reference = 'zu8nmyev66'
+response = requests.get(
+                       f"https://api.paystack.co/transfer/verify/{reference}",
+                       headers={
+                           "Authorization" : "Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404",  
+                       } 
+                )
+'''
+'''response = requests.get(
+                       f"https://api.paystack.co/transaction/2609111127",
+                       headers={
+                           "Authorization" : "Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404",  
+                       } 
+                    )
+details = response.json()
+for k, val  in details['data'].items():
+    print("-------------------------------------")
+    print(f"{k} {val} \n")
+    # for a, b in value.items():
+    #     print(f"{a} : {b} \n")
+    # print("-------------------------------------")
+
+# '''
+        
+# print(details)
 
 @app.route("/")
 def home():
@@ -133,7 +176,7 @@ def get_bank_list():
         print(country)
         response = requests.get('https://api.paystack.co/bank', 
                         params={
-                            'country':country.lower(),
+                            'country':country.lower()
                         },
                         )
         
@@ -142,7 +185,52 @@ def get_bank_list():
         return render_template('index.html', banks=data)
     else:
         return redirect('/')
+
+@app.route('/transaction/initialize', methods=["GET", "POST"])
+def initialize_transaction():
+    email = "toluwalope.david@gmail.com"
+    amount = 200
+    response = requests.post(
+                            "https://api.paystack.co/transaction/initialize",
+                            headers={
+                                'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404',
+                                'Content-Type': 'application/json'
+                                },
+                            json={
+                                "email": email,
+                                "amount": amount*100
+                            }
+                        )
+    return jsonify({200})
+
+# @app.route('/create_charge')
+# def create_charge():
+response = requests.post(
+                            "https://api.paystack.co/transaction/initialize",
+                            headers={
+                                'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404',
+                                'Content-Type': 'application/json'
+                                },
+                            json={
+                                "email" : "jhimmie.jimi@gmail.com",
+                                "amount": 1000,
+                                "bank": {
+                                    "code": "033",
+                                    "account_number": "2230914852"
+                                }
+                            }
+                        )
+print(response.json())
     
+    
+@app.route('/mywebhook')
+def listening_for_events():
+    body = request.get_json()
+    print(body)
+
+    return jsonify({
+        "status": 200
+        })
     
 if __name__== "__main__":
     app.run(debug=True)

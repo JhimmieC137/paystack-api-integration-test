@@ -49,7 +49,7 @@
           <li><a class="nav-link scrollto" href="#verification">Resolve Account Number API</a></li>
           <li><a class="nav-link scrollto" href="#transfer-recipient">Transfer Recipient API</a></li>
           <li><a class="nav-link scrollto " href="#popup">PopUp Checkout</a></li>
-          <li><a class="getstarted scrollto" href="#about">My Submission</a></li>
+          <li><a class="getstarted scrollto" href="https://docs.google.com/document/d/1MeL5_cmj1SUVUqjB7CSSn56lWD7Yor2O1YzGdN1AiRc/edit?usp=sharing" target="_blank">My Submission</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -70,7 +70,7 @@
           <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
             <h3>About this application</h3><br>
             <p class="fst-italic">
-              This is webapp was created to demonstrate the intergration of at least two of Paystack's API 
+              This is webapp was created to demonstrate the intergration of at least two of Paystack's API's 
             </p>
             <ul>
               <li><i class="bi bi-check-circled"></i>It demonstrates three of their payment API's and one of their miscellaneous API's (Bank List) </li>
@@ -90,7 +90,7 @@
       <div class="container">
         <div class="api-info">
           <h2>List Bank API</h2><br>
-          <p>This Api gets a list of all supported banks within a specified country of paystack's coverage, and their properties.<br> To see a demonstration, type in a country e.g Ghana or Nigeria</p>
+          <p>This Api gets a list of all supported banks within a specified country of paystack's coverage, and their properties.<br> To see a demonstration, type in a country e.g Nigeria</p>
         </div>
 
         <form action="{{ url_for('get_bank_list') }}" method='post'>
@@ -111,6 +111,7 @@
                   <div style="overflow-x:auto;">
                     <table>
                       <tr>
+                        <th>id</th>
                         <th>Name</th>
                         <th>Slug</th>
                         <th>Code</th>
@@ -118,11 +119,10 @@
                         <th>Gateway</th>
                         <th>Pay_with_bank</th>
                         <th>active</th>
-                        <th>is_deleted</th>
                         <th>country</th>
                         <th>currency</th>
                         <th>type</th>
-                        <th>id</th>
+                        <th>is_deleted</th>
                         <th>createdAt</th>
                         <th>updatedAt</th>
                       </tr>
@@ -133,11 +133,11 @@
                         {% endfor %}
                       </tr>
                       {% endfor %}
-                    <table>
+                    </table>
                   </div>
                 </div>
                 {% else %}
-                  <h6><em>{{ banks.message }}<em></h6>
+                  <h6><em>{{ banks.message }}</em></h6>
                 {% endif %}
               </div>
             </div>
@@ -172,7 +172,7 @@
                 {% if r_account.status == true %}
                   <h6>The account number {{ r_account.data['account_number'] }} belongs to {{ r_account.data['account_name'] }}</h6>
                 {% else %}
-                  <h6><em>{{ r_account.message }}<em></h6>
+                  <h6><em>{{ r_account.message }}</em></h6>
                 {% endif %}
               </div>
             </div>
@@ -220,7 +220,7 @@
               <input type="tel" placeholder="Bank Code" name='bank_code'>
             </div>
             <div>
-              <button type="submit">Create receipient</button>
+              <button type="submit">Create recipient</button>
             </div>
             <br>
             {% if t_recipient %}
@@ -229,7 +229,7 @@
                 {% if t_recipient.status == true %}
                   <h6>{{ t_recipient }}</h6>
                 {% else %}
-                  <h6><em>{{ t_recipient.message }}<em></h6>
+                  <h6><em>{{ t_recipient.message }}</em></h6>
                 {% endif %}
               </div>
             </div>
