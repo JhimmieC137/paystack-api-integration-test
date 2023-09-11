@@ -1,8 +1,11 @@
-from flask import Flask, jsonify, request, render_template, redirect, url_for
-from flask_cors import CORS
+import os
 import uuid
-import requests
+from .func_list import get_account_info, create_transfer_recipient, list_available_banks, get_payment_link
+from flask import Flask, request, render_template, redirect
+from flask_cors import CORS
+from dotenv import load_dotenv
 
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -10,109 +13,6 @@ app.config.from_object(__name__)
 
 CORS(app, resources={r"/*":{'origins':"*"}})
 
-#Printing details of available banks in the country 
-'''
-response = requests.get('https://api.paystack.co/bank', 
-                        params={
-                            'country':'nigeria',
-                            "pay_with_bank" : True
-                        },
-                        )
-banks = response.json()
-for bank_details in banks['data']:
-    print(f'{bank_details}\n')
-'''
-#Validating your bank acount
-'''
-response = requests.get('https://api.paystack.co/bank/resolve', 
-                        params={
-                            'account_number':'2230914852',
-                            'bank_code': '033'
-                        },
-                        headers = {
-                            'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404'
-                            },
-                        )
-'''
-#Creating a transfer recipient
-'''
-response = requests.post('https://api.paystack.co/transferrecipient', 
-                        headers = {
-                            'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404',
-                            'Content-Type': 'application/json'
-                            },
-                        json = {"type": "nuban",
-                            "name": "T",
-                            "account_number": "0233552560",
-                            "bank_code": "058",
-                            "currency": "NGN"
-                            },
-                        )
-ref = uuid.uuid4()
-'''
-
-#Initiate a transfer
-'''
-reference = uuid.uuid4()
-
-response = requests.post ('https://api.paystack.co/transfer',
-                            headers = {
-                                "Authorization": "Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404",
-                                "Content-Type": "application/json"
-                            },
-                            json = {
-                                "source": "balance",
-                                "reason": "Calm down", 
-                                "amount": "3794800", 
-                                "reference": f'{reference}',
-                                "recipient": "RCP_gx2wn530m0i3w3m"
-                                }               
-                            )
-'''
-
-#Initialize Transaction
-'''
-email = "jhimmie.jimi@gmail.com"
-amount = 800
-response = requests.post(
-                        "https://api.paystack.co/transaction/initialize",
-                        headers={
-                            'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404',
-                            'Content-Type': 'application/json'
-                            },
-                        json={
-                            "email": email,
-                            "amount": amount*100
-                        }
-                    )
-'''
-#Verify Transaction
-'''
-reference = 'zu8nmyev66'
-response = requests.get(
-                       f"https://api.paystack.co/transfer/verify/{reference}",
-                       headers={
-                           "Authorization" : "Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404",  
-                       } 
-                )
-'''
-'''response = requests.get(
-                       f"https://api.paystack.co/transaction/2609111127",
-                       headers={
-                           "Authorization" : "Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404",  
-                       } 
-                    )
-details = response.json()
-for k, val  in details['data'].items():
-    print("-------------------------------------")
-    print(f"{k} {val} \n")
-    # for a, b in value.items():
-    #     print(f"{a} : {b} \n")
-    # print("-------------------------------------")
-
-# '''
-        
-# print(details)
 
 @app.route("/")
 def home():
@@ -120,117 +20,72 @@ def home():
 
 @app.route("/verify", methods=['GET','POST'])
 def resolve_account():
+    '''
+        Verifies the owner of the account using the account number 
+        and bank code. 
+    '''
     if request.method == 'POST':
-        account_number = request.form.get('account_number')
-        bank_code = request.form.get('bank_code')
-
-        response = requests.get('https://api.paystack.co/bank/resolve', 
-                            params={
-                                'account_number': f'{account_number}',
-                                'bank_code': f'{bank_code}'
-                            },
-                            headers = {
-                                'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404'
-                                },
-                            )
-        data = response.json()
-        print(data)
-        return render_template('index.html', r_account=data)
+        data = get_account_info(request.form.get('account_number'), request.form.get('bank_code'))
+        return render_template('index.html', r_account=data)    #Page refreshes to show response/result
     else:
         return redirect('/')
 
 
 @app.route("/create_recipient", methods=['GET','POST'])
-def create_transfer_recipient():
+def create_recipient():
+    '''
+        Creates/confirms a transfer recipient, using account owner's names,
+        account number and bank code of the bank 
+    '''
     if request.method == 'POST':
-        print(request.form)
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
-        account_number = request.form.get('account_number')
-        bank_code = request.form.get('bank_code')
-        account_type =  request.form.get('type')
-        currency = request.form.get('currency')
 
-        response = requests.post('https://api.paystack.co/transferrecipient', 
-                        headers = {
-                            'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404',
-                            'Content-Type': 'application/json'
-                            },
-                        json = {"type": account_type,
-                            "name": f'{first_name} {last_name}',
-                            "account_number": account_number,
-                            "bank_code": bank_code,
-                            "currency": currency
-                            },
-                        )
-        data = response.json()
-        print(data)
-        return render_template('index.html', t_recipient=data)
+        user_data = {
+            "first_name": request.form.get('first_name'),
+            "last_name": request.form.get('last_name'),
+            "account_number":  request.form.get('account_number'),
+            "bank_code": request.form.get('bank_code'),
+            "account_type":  request.form.get('type'),
+            "currency": request.form.get('currency')
+        }
+        
+        data = create_transfer_recipient(user_data)
+       
+        return render_template('index.html', t_recipient=data)    #Page refreshes to show response/result
     else:
         return redirect('/')
+    
 
 @app.route("/get_banks", methods=['GET','POST'])
 def get_bank_list():
+    '''
+        Returns list of banks in specified country 
+    '''
     if request.method == 'POST':
-        country = f"{request.form.get('country')}"
-        print(country)
-        response = requests.get('https://api.paystack.co/bank', 
-                        params={
-                            'country':country.lower()
-                        },
-                        )
-        
-        data = response.json()
-        print(data)
-        return render_template('index.html', banks=data)
+        data = list_available_banks(f"{request.form.get('country')}")
+        return render_template('index.html', banks=data)    #Page refreshes to show response/result
     else:
         return redirect('/')
+    
 
-@app.route('/transaction/initialize', methods=["GET", "POST"])
+@app.route('/initialize-transaction', methods=["GET", "POST"])
 def initialize_transaction():
-    email = "toluwalope.david@gmail.com"
-    amount = 200
-    response = requests.post(
-                            "https://api.paystack.co/transaction/initialize",
-                            headers={
-                                'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404',
-                                'Content-Type': 'application/json'
-                                },
-                            json={
-                                "email": email,
-                                "amount": amount*100
-                            }
-                        )
-    return jsonify({200})
-
-# @app.route('/create_charge')
-# def create_charge():
-response = requests.post(
-                            "https://api.paystack.co/transaction/initialize",
-                            headers={
-                                'Authorization': 'Bearer sk_test_6be99f95d69d234aa607b16ec613208f0b9e6404',
-                                'Content-Type': 'application/json'
-                                },
-                            json={
-                                "email" : "jhimmie.jimi@gmail.com",
-                                "amount": 1000,
-                                "bank": {
-                                    "code": "033",
-                                    "account_number": "2230914852"
-                                }
-                            }
-                        )
-print(response.json())
+    '''
+        Creates a link to the payment using customers email and price to be paid
+    '''
+    if request.method == 'POST':
+        link = get_payment_link(request.form.get('email'), request.form.get('amount'))
+        return render_template('index.html', tr_link=link)  #Page refreshes to show response/result
+    else:
+        return redirect('/')
     
-    
-@app.route('/mywebhook')
-def listening_for_events():
-    body = request.get_json()
-    print(body)
+# @app.route('/mywebhook')
+# def listening_for_events():
+#     body = request.get_json()
+#     print(body)
 
-    return jsonify({
-        "status": 200
-        })
+#     return jsonify({
+#         "status": 200
+#         })
     
 if __name__== "__main__":
     app.run(debug=True)

@@ -1287,27 +1287,28 @@ Payment page
   padding: 10px 20px;
 }
 .payment-form input{
-  border: 2px solid #18d26e;
-  border-radius: 38px;
+  border: 1px solid #18d26e;
+  border-radius: 0.7em;
   text-align: center;
   background: none;
+  height: 2.5em;
+  transition: 0.3s ease-in-out;
 }
 .payment-form input::placeholder{
   text-align: center;
   color: #787676b9;
 }
 .payment-form button{
-  color: #18d26e;
-  border: 2px solid #18d26e;
+  color: #ffffff;
+  border: 2px solid #93a59c78;
   border-radius: 23px;
   width: 90px;
   font-size: 22px;
   font-weight: 600;
-  background: none;
+  background: #18d26e;
 }
 .payment-form button:hover{
-  background: #40b05e;
-  color: #fff;
+  background: #000000;
 }
 .payment-form .email-section input{
   width:300px;
@@ -1330,8 +1331,9 @@ For the forms
 }
 .form-div > div input{
   border: 1px solid #18d26e;
-  border-radius: 23px;
+  border-radius: 0.7em;
   text-align: center;
+  height: 2.5em;
 }
 .form-div > div select{
   border: 1px solid #a7a7a7;
@@ -1340,19 +1342,18 @@ For the forms
   background: #e1e1e15f;
 }
 .form-div > div button{
-  border: 3px solid #18d26e;
+  border: 3px solid #a7ada973;
   border-radius: 23px;
   text-align: center;
-  background: #fff;
-  color: #18d26e;
+  background: #18d26e;
+  color: #fff;
   font-size: 18px;
   font-weight: 600;
   width: 230px;
   transition: 0.3s ease-in-out;
 }
 .form-div > div button:hover{
-  background: #18d26e;
-  color: #fff;
+  background: #000000;
 }
 .form-div > div input::placeholder{
   text-align: center;
@@ -1363,6 +1364,23 @@ For the forms
   background: #c2c2c2;
   border-radius: 18px;
   text-align: center;
+  border: 1px solid #000000c9;
+  overflow: hidden;
+}
+.form-div .results div{
+  max-width: 60em;
+  max-height: 25em;
+  overflow-y: scroll;
+  overflow-x: auto;
+}
+.form-div .results div::-webkit-scrollbar{
+  background-color: #fff;
+  width: 0.7em;
+}
+.form-div .results div::-webkit-scrollbar-thumb{
+  background-color: #d6d6d6d5;
+  border-radius: 0.5em;
+  height: 30%;
 }
 .form-div .results h6{
   line-height: 50px;

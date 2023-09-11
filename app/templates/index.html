@@ -45,6 +45,7 @@
 
       <nav id="navbar" class="navbar">
         <ul>
+          <li><a class="nav-link scrollto" href="#account-confirmation">Transaction API</a></li>
           <li><a class="nav-link scrollto" href="#bank-list">List Bank API</a></li>
           <li><a class="nav-link scrollto" href="#verification">Resolve Account Number API</a></li>
           <li><a class="nav-link scrollto" href="#transfer-recipient">Transfer Recipient API</a></li>
@@ -86,6 +87,44 @@
       </div>
     </section><!-- End About Us Section -->
 
+
+    <section id="account-confirmation">
+      <div class="container">
+        <div class="api-info">
+          <h2>Transactions API</h2><br>
+          <p>This endpoint will Initialize a transaction from your backend, creating a link for that particular transaction.<br> To see a demonstration, type in a valid email address and an amount you will like to pay.<br> This is a test transaction, no real money would be sent</p>
+        </div>
+
+        <form action="{{ url_for('initialize_transaction') }}" enctype="multipart/form-data"  method='post'>
+          <div id="account-confirmation" class="form-div">
+            <div>
+              <input type="email" placeholder="Email address" name='email'>
+            </div>
+            <div>
+              <input type="text" placeholder="Amount" name='amount'>
+            </div>
+            <div>
+              <button type="submit">Pay amount</button>
+            </div>
+            <br>
+            {% if tr_link %}
+            <div>
+              <div class='results row'>
+                {% if tr_link.status == true %}
+                  <h6>Visit this link to make payment:  <strong><a href={{ tr_link.data['authorization_url'] }}>{{ tr_link.data['authorization_url'] }}</a></strong> </h6>
+                {% else %}
+                  <h6><em>{{ tr_link.message }}</em></h6>
+                {% endif %}
+              </div>
+            </div>
+
+            {% endif %}
+          </div>
+        </form>
+
+      </div>
+    </section>
+
     <section id="bank-list">
       <div class="container">
         <div class="api-info">
@@ -104,11 +143,11 @@
           </div>
           <br>
           {% if banks %}
-            <div>
+            <div class="form-div">
               <div class='results'>
                 {% if banks.status == true %}
                 <div class="row">
-                  <div style="overflow-x:auto;">
+                  <div>
                     <table>
                       <tr>
                         <th>id</th>
@@ -155,7 +194,7 @@
         </div>
 
         <form action="{{ url_for('resolve_account') }}" enctype="multipart/form-data"  method='post'>
-          <div class="form-div">
+          <div id="account-confirmation" class="form-div">
             <div>
               <input type="tel" placeholder="Account Number" name='account_number'>
             </div>
@@ -192,7 +231,7 @@
           <p>This is API basically confirms the owner of the account you want to tansfer too by returning specific information about the account.<br> To see a demonstration, type in the name of the owner of the account, the account number and the corresponding bank code.</p>
         </div>
 
-        <form action="{{ url_for('create_transfer_recipient') }}" method="post">
+        <form action="{{ url_for('create_recipient') }}" method="post">
           <div class="form-div">
             <div>
               <input type="text" placeholder="First name" name='first_name'>
@@ -240,7 +279,7 @@
       </div>
     </section>
 
-    <!-- ======= Contact Section ======= -->
+    <!-- ======= Pop-ups Section ======= -->
     <section id="popup" class="contact">
       <div class="container">
 
