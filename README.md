@@ -11,7 +11,8 @@ This is the landing page of the application. It returns a rendering of the homep
 Methods allowed: 'GET'
 
 ### _initialize_transaction_ ('/initialize-transaction'):
-It takes in form data to Initialize a transaction from your backend, by generating a link to a payment page. Sending a request, payload should be added as form data in the format:
+[See paystack documentation](https://paystack.com/docs/api/transaction/#initialize)
+It takes in form data to Initialize a transaction from your backend, by generating a link to a paystack payment page/portal. Sending a request, payload should be added as form data in the format:
 ```
         data = {
             'email': '{a vald account number}',
@@ -21,6 +22,7 @@ It takes in form data to Initialize a transaction from your backend, by generati
 Methods allowed: 'GET' 'POST'
 
 ### _get_bank_list_ ('/get-banks'):
+[See paystack documentation](https://paystack.com/docs/api/miscellaneous/#bank)
 This endpoint uses a function that fetches data on every bank within a specified country that uses paystack's services i.e Nigeria, Ghana and South Africa. If a different country is specified, it returns an empty list. Sending a request, payload should be added as form data in the format:
 ```
         data = {
@@ -30,6 +32,7 @@ This endpoint uses a function that fetches data on every bank within a specified
 Methods allowed: 'GET' 'POST'
 
 ### _resolve_account_ ('/verify'):
+[See paystack documentation](https://paystack.com/docs/api/verification/#resolve-account)
 The purpose of the endpoint is to verify the details of the user before initiating a transaction. It'll require the user's bank account number and the bank's unique code(this can be gotten from the bank list api). It returns name and other details concerning the account if data is valid. Sending a request, payload should be added as form data in the format:
 ```
         data = {
@@ -40,7 +43,8 @@ The purpose of the endpoint is to verify the details of the user before initiati
 Methods allowed: 'GET' 'POST'
 
 ### _create_recipient_ ('/create-recipient'):
-This endpoint is silimar to the _resolve_account_ endpoint. It requires details like the user's name, account number, bank code,  currency and account type, which are all used to create a transfer recipient object containing more information on the account. Sending a request, payload should be added as form data in the format:
+[See paystack documentation](https://paystack.com/docs/api/transfer-recipient/#create)
+This endpoint adds the account to your beneficiaries. It requires details like the user's name, account number, bank code,  currency and account type, which are all used to create a transfer recipient beneficiary on your account. a request, payload should be added as form data in the format:
 ```
         data = {
             'first_name': '{first name}',
@@ -54,6 +58,7 @@ This endpoint is silimar to the _resolve_account_ endpoint. It requires details 
 Methods allowed: 'GET' 'POST'
 
 ### Pop-up checkout:
+[See paystack docs](https://paystack.com/docs/payments/accept-payments/#popup)
 This is no endpoint and has no connection to the flask apllication in this project, it is handled by some lines of inline Javascript code on the frontend that sends and fetches data to and from paystacks API and pops up a payment portal after submitting names, emailand and amount to be paid.
 
 #### Note
@@ -100,4 +105,4 @@ Then run the command `flask run`
 ## Testing
 To run the unit and integrations tests on the app, navigate to the `tests` folder and run the command `python pytest`.
 
-This application as also been deploeyed to a live server @ [jimi.theupfolio.com](https://jimi.theupfolio.com/)
+This application as also been deployed to a live server @ [jimi.theupfolio.com](https://jimi.theupfolio.com/)
