@@ -11,7 +11,7 @@ This is the landing page of the application. It returns a rendering of the homep
 Methods allowed: 'GET'
 
 ### _initialize_transaction_ ('/initialize-transaction'):
-[See paystack documentation](https://paystack.com/docs/api/transaction/#initialize)  
+[See paystack documentation](https://paystack.com/docs/api/transaction/#initialize)  <br>
 
 It takes in form data to Initialize a transaction from your backend, by generating a link to a paystack payment page/portal. Sending a request, payload should be added as form data in the format:
 ```
