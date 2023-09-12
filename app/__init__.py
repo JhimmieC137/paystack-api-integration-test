@@ -29,9 +29,11 @@ def resolve_account():
     '''
     if request.method == 'POST':
         data = get_account_info(request.form.get('account_number'), request.form.get('bank_code'))
+        
         return render_template('index.html', r_account=data)    #Page refreshes to show response/result
+    
     elif request.method == 'GET':
-        return redirect('/', 200)
+        return redirect('/')
     
     else:
         abort(405)
@@ -57,10 +59,10 @@ def create_recipient():
             abort(403)
         
         data = create_transfer_recipient(user_data)
-       
         return render_template('index.html', t_recipient=data)    #Page refreshes to show response/result
+    
     elif request.method == 'GET':
-        return redirect('/', 200)
+        return redirect('/')
     
     else:
         abort(405)
@@ -73,9 +75,11 @@ def get_bank_list():
     '''
     if request.method == 'POST':
         data = list_available_banks(f"{request.form.get('country')}")
+        
         return render_template('index.html', banks=data)    #Page refreshes to show response/result
+   
     elif request.method == 'GET':
-        return redirect('/', 200)
+        return redirect('/')
     
     else:
         abort(405)
@@ -88,9 +92,11 @@ def initialize_transaction():
     '''
     if request.method == 'POST':
         link = get_payment_link(request.form.get('email'), request.form.get('amount'))
+        
         return render_template('index.html', tr_link=link)  #Page refreshes to show response/result
+    
     elif request.method == 'GET':
-        return redirect('/', 200)
+        return redirect('/')
     
     else:
         abort(405)

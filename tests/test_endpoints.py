@@ -32,9 +32,6 @@ errload = {
     
 def test_resolve_account():
     response = requests.post(f'http://{os.getenv("DEV_BASE_URL")}/verify',
-        headers = {
-            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}'
-        },
         data = {
             'account_number': payload['account_number'],
             'bank_code': payload["bank_code"]
@@ -44,9 +41,6 @@ def test_resolve_account():
     
 def test_err_resolve_account():
     response = requests.patch(f'http://{os.getenv("DEV_BASE_URL")}/verify',
-        headers = {
-            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}'
-        },
         data = {
             'account_number': errload['account_number'],
             'bank_code': errload["bank_code"]
@@ -58,9 +52,6 @@ def test_err_resolve_account():
     
 def test_get_bank_list():
     response = requests.post(f'http://{os.getenv("DEV_BASE_URL")}/get-banks',
-        headers = {
-            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}'
-        },
         data = {
             'country': errload['sample_country'],
         })
@@ -70,9 +61,6 @@ def test_get_bank_list():
     
 def test_err_get_bank_list():
     response = requests.put(f'http://{os.getenv("DEV_BASE_URL")}/get-banks',
-        headers = {
-            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}'
-        },
         data = {
             'country': errload['sample_country'],
         })
@@ -81,9 +69,6 @@ def test_err_get_bank_list():
     
 def test_initialize_transaction():
     response = requests.post(f'http://{os.getenv("DEV_BASE_URL")}/initialize-transaction',
-        headers = {
-            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}'
-        },
         data = {
             'email': payload['email'],
             'amount': payload['amount']
@@ -93,9 +78,6 @@ def test_initialize_transaction():
     
 def test_err_initialize_transaction():
     response = requests.post(f'http://{os.getenv("DEV_BASE_URL")}/initialize-transactions',
-        headers = {
-            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}'
-        },
         data = {
             'email': errload['email'],
             'amount': errload['amount']

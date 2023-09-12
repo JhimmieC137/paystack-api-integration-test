@@ -71,15 +71,15 @@
           <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
             <h3>About this application</h3><br>
             <p class="fst-italic">
-              This is webapp was created to demonstrate the intergration of at least two of Paystack's API's 
+              This is webapp was created to demonstrate the intergration of Paystack's API's 
             </p>
             <ul>
-              <li><i class="bi bi-check-circled"></i>It demonstrates three of their payment API's and one of their miscellaneous API's (Bank List) </li>
-              <li><i class="bi bi-check-circled"></i>These API's are integrated and are functioning on test Secret and Public Keys</li>
-              <li><i class="bi bi-check-circled"></i>Hence even the Pop up intergration is a test case and will not perform actual payment</li>
+              <li><i class="bi bi-check-circled"></i>It demonstrates the API's, their requirements and responses</li>
+              <li><i class="bi bi-check-circled"></i>These API's are integrated and are functioning on test Secret Keys</li>
+              <li><i class="bi bi-check-circled"></i>Hence even the Pop up intergration is a test case and will not perform actual money transfer</li>
             </ul>
             <p>
-              Each of these API's are crucial and helpful for any payment platform 
+              Each of these API's are crucial and helpful for any platform that should include payment features. 
             </p>
           </div>
         </div>
@@ -228,7 +228,7 @@
       <div class="container">
         <div class="api-info">
           <h2>Transfer Recepient API</h2><br>
-          <p>This is API basically confirms the owner of the account you want to tansfer too by returning specific information about the account.<br> To see a demonstration, type in the name of the owner of the account, the account number and the corresponding bank code.</p>
+          <p>This is API creates a transfer recipient, adding them as a beneficiary to you account. It also confirms the owners account details because it returns information on the account.<br> To see a demonstration, type in the name of the owner of the account, the account number and the corresponding bank code.</p>
         </div>
 
         <form action="{{ url_for('create_recipient') }}" method="post">
