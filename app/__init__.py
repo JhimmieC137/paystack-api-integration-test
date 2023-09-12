@@ -1,19 +1,91 @@
 import os
-import uuid
-from .func_list import get_account_info, create_transfer_recipient, list_available_banks, get_payment_link
 from flask import Flask, request, render_template, redirect, abort, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_caching import Cache
+import requests
+
 
 load_dotenv()
 
 app = Flask(__name__)
 
 app.config.from_object(__name__)
-cache = Cache(app)
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
+cache.init_app(app)
 
 CORS(app, resources={r"/*":{'origins':"*"}})
+
+
+@cache.memoize(timeout=3600)
+def get_account_info(account_number, bank_code):
+    '''Sends account number and bank code of the bank to get account information'''
+    
+    response = requests.get('https://api.paystack.co/bank/resolve', 
+        params={
+            'account_number': f'{account_number}',
+            'bank_code': f'{bank_code}'
+        },
+        headers = {
+            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}'
+            },
+        )
+    return response.json()
+
+
+
+@cache.memoize(timeout=3600)
+def create_transfer_recipient(payload):
+    '''Sends names, account number, account type, currency and bank code to get account information'''
+    
+    response = requests.post('https://api.paystack.co/transferrecipient', 
+        headers = {
+            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}',
+            'Content-Type': 'application/json'
+            },
+        json = {"type": payload["account_type"],
+            "name": f'{payload["first_name"].lower()} {payload["last_name"].lower()}',
+            "account_number": payload["account_number"],
+            "bank_code": payload["bank_code"],
+            "currency": payload["currency"]
+            },
+        )
+    return response.json()
+
+
+
+@cache.memoize(timeout=3600)
+def list_available_banks(country):
+    '''Gets a list of available banks in the country and their neccessary information such as bank code, etc.'''
+    
+    response = requests.get('https://api.paystack.co/bank', 
+            params={
+                'country':country,
+            },
+        )
+    return response.json()
+
+
+@cache.memoize(timeout=3600)
+def get_payment_link(email, amount):
+    '''Gets an authorized payment link'''
+    
+    response = requests.post(
+        "https://api.paystack.co/transaction/initialize",
+        headers={
+            'Authorization': f'Bearer {os.getenv("SECRET_KEY")}',
+            'Content-Type': 'application/json'
+            },
+        json={
+            "email": email,
+            "amount": amount
+        })
+    return response.json()
+
+
+
+
+
 
 
 @app.route("/", methods=['GET'])
@@ -73,7 +145,7 @@ def create_recipient():
     
 
 @app.route("/get-banks", methods=['GET','POST'])
-@cache.memoize(timeout=3600)    #Cache memorize stores results per arguments for the next hour
+# @cache.memoize(timeout=3600)    #Cache memorize stores results per arguments for the next hour
 def get_bank_list():
     '''
         Returns list of banks in specified country i.e Nigeria or Ghana

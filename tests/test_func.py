@@ -4,7 +4,7 @@ import os
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
-from app.func_list import get_account_info, create_transfer_recipient, list_available_banks, get_payment_link
+from app import get_account_info, create_transfer_recipient, list_available_banks, get_payment_link
 
  
 payload = {
