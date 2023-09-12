@@ -88,7 +88,7 @@ Install the packages listed in the requirements.txt file
 ```
 pip install -r requirements.txt
 ```
-Create a .env file and fill in the details
+Use the information below to change your .env file contents if you want. A .env file is already provided for purpose of testing. In production, you should exlude using the .gitignore file.
 
 ```
 FLASK_DEBUG=False   #Changes to True in production
