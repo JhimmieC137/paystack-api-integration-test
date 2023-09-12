@@ -1,5 +1,8 @@
-import requests
+import sys
 import os
+import requests
+
+
 def get_account_info(account_number, bank_code):
     '''Sends account number and bank code of the bank to get account information'''
     
@@ -32,7 +35,7 @@ def create_transfer_recipient(payload):
         )
     return response.json()
 
-
+# @cache.memoize(timeout=3600)
 def list_available_banks(country):
     '''Gets a list of available banks in the country and their neccessary information such as bank code, etc.'''
     

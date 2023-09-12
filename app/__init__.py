@@ -4,12 +4,14 @@ from .func_list import get_account_info, create_transfer_recipient, list_availab
 from flask import Flask, request, render_template, redirect, abort, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+from flask_caching import Cache
 
 load_dotenv()
 
 app = Flask(__name__)
 
 app.config.from_object(__name__)
+cache = Cache(app)
 
 CORS(app, resources={r"/*":{'origins':"*"}})
 
@@ -22,6 +24,7 @@ def home():
         abort(405)
 
 @app.route("/verify", methods=['GET','POST'])
+@cache.memoize(timeout=3600)    #Cache memorize stores results per arguments for the next hour  
 def resolve_account():
     '''
         Verifies the owner of the account using the account number 
@@ -40,6 +43,7 @@ def resolve_account():
 
 
 @app.route("/create-recipient", methods=['GET','POST'])
+@cache.memoize(timeout=3600)   #Cache memorize stores results per arguments for the next hour
 def create_recipient():
     '''
         Creates/confirms a transfer recipient, using account owner's names,
@@ -69,6 +73,7 @@ def create_recipient():
     
 
 @app.route("/get-banks", methods=['GET','POST'])
+@cache.memoize(timeout=3600)    #Cache memorize stores results per arguments for the next hour
 def get_bank_list():
     '''
         Returns list of banks in specified country i.e Nigeria or Ghana
@@ -86,6 +91,7 @@ def get_bank_list():
     
 
 @app.route('/initialize-transaction', methods=["GET", "POST"])
+@cache.memoize(timeout=3600)    #Cache memorize stores results per arguments for the next hour
 def initialize_transaction():
     '''
         Creates a link to the payment using customers email and price to be paid
@@ -102,7 +108,7 @@ def initialize_transaction():
         abort(405)
     
 
-
+#Error handling
 @app.errorhandler(404)
 def not_found(error):
     return jsonify ({
