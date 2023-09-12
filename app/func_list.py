@@ -1,6 +1,5 @@
 import requests
 import os
-
 def get_account_info(account_number, bank_code):
     '''Sends account number and bank code of the bank to get account information'''
     
@@ -25,7 +24,7 @@ def create_transfer_recipient(payload):
             'Content-Type': 'application/json'
             },
         json = {"type": payload["account_type"],
-            "name": f'{payload["first_name"]} {payload["last_name"]}',
+            "name": f'{payload["first_name"].lower()} {payload["last_name"].lower()}',
             "account_number": payload["account_number"],
             "bank_code": payload["bank_code"],
             "currency": payload["currency"]
@@ -57,6 +56,4 @@ def get_payment_link(email, amount):
             "email": email,
             "amount": amount
         })
-    print(response.json())
-    
     return response.json()
